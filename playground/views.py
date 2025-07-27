@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, Http404
 from .models import Product
 from .forms import ProductForm, RawProductForm
@@ -54,3 +54,24 @@ def product_create(request):
         'form': my_form,      
     }
     return render(request, 'product_create.html', context)
+
+def product_delete(request, my_id):
+    obj = get_object_or_404(Product, id=my_id)
+    if request.method == "POST":
+        obj.delete()  # Delete the object if the request method is POST
+        return redirect('../../../')
+
+    context = {
+        'object': obj,
+    }
+    return render(request, 'product_delete.html', context)  # Render a confirmation page 
+
+
+def product_list(request):
+    object_list = Product.objects.all()
+
+    context = {
+        'objects': object_list,
+    }
+
+    return render(request, 'product_list.html', context)
